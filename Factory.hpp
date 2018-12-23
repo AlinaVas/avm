@@ -5,7 +5,7 @@
 
 class Factory {
 
-	typedef IOperand const * (Factory::*funcPtr)(eOperandType, std::string const);
+	typedef IOperand const * (Factory::*funcPtr)(std::string const &);
 
 public:
 
@@ -21,5 +21,5 @@ private:
 	IOperand const * createFloat(std::string const & value) const;
 	IOperand const * createDouble(std::string const & value) const;
 
-	std::vector <funcPtr> _vecOfFunc;
+	std::vector<funcPtr> _vecOfFunc;
 };

@@ -20,7 +20,7 @@ Factory::createInt8(std::string const & value) const {
 
 	std::cout<< "int8" << std::endl;
 	/////////
-	return new Operand<int8_t>(value, eInt8);
+	return new Operand<int8_t>(value, Int8, this);
 
 }
 
@@ -28,26 +28,26 @@ IOperand const *
 Factory::createInt16(std::string const & value) const {
 
 	std::cout<< "int16" << std::endl;
-	return new Operand<int16_t>(value, eInt16);
+	return new Operand<int16_t>(value, Int16, this);
 }
 
 IOperand const *
 Factory::createInt32(std::string const & value) const {
 
 	std::cout<< "int32" << std::endl;
-	return new Operand<int32_t>(value, eInt32);
+	return new Operand<int32_t>(value, Int32, this);
 }
 
 IOperand const *
 Factory::createFloat(std::string const & value) const {
 
 	std::cout<< "float" << std::endl;
-	return new Operand<float>(value, eFloat);
+	return new Operand<float>(value, Float, this);
 }
 
 IOperand const *
 Factory::createDouble(std::string const & value) const {
 
 	std::cout<< "double" << std::endl;
-	return new Operand<double>(value, eDouble);
+	return new Operand<double>(value, Double, this);
 }

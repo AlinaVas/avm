@@ -1,14 +1,16 @@
-template <typename T>
-Operand::Operand(std::string & value, eOperandType type) : _value(value), _type(type) {}
+#include "Operand.hpp"
 
 template <typename T>
-Operand::Operand(Operand<T> const & rhs) {
+Operand<T>::Operand(std::string & value, eOperandType type, Factory *ptr) : _value(value), _type(type), _ptr(ptr) {}
+
+template <typename T>
+Operand<T>::Operand(Operand<T> const & rhs) {
 
 	*this = rhs;
 }
 
 template <typename T>
-Operand::~Operand() {}
+Operand<T>::~Operand() {}
 
 template <typename T> std::string const &
 Operand<T>::toString() const { return _value; }
@@ -17,9 +19,16 @@ template <typename T> eOperandType
 Operand<T>::getType() const { return _type; }
 
 template <typename T> int
-Operand<T>::getPrecision() const { return _precision; }
+Operand<T>::getPrecision() const {
 
-template <typename T> Operand<T> const &
+	if (_type == Float)
+		return 6;
+	if (_type == Double)
+		return 15;
+	return 0;
+}
+
+template <typename T> Operand<T> &
 Operand<T>::operator=(Operand<T> const & rhs) {
 
 	if (this == &rhs)
@@ -34,9 +43,11 @@ template <typename T> IOperand const *
 Operand<T>::operator+(IOperand const & rhs) const {
 
 	eOperandType type = (_type > rhs.getType()) ? _type : rhs.getType();
+	long double result;
+
 	try
 	{
-		long double result = std::stold(toString()) + std::stold(rhs.toString());
+		result = std::stold(toString()) + std::stold(rhs.toString());
 	} 
 	catch (std::exception &e) 
 	{
@@ -51,10 +62,12 @@ template <typename T> IOperand const *
 Operand<T>::operator-(IOperand const & rhs) const {
 
 	eOperandType type = (_type > rhs.getType()) ? _type : rhs.getType();
+	long double result;
+
 	try
 	{
 		// порядок?
-		long double result = std::stold(toString()) - std::stold(rhs.toString());
+		result = std::stold(toString()) - std::stold(rhs.toString());
 	} 
 	catch (std::exception &e) 
 	{
@@ -69,9 +82,11 @@ template <typename T> IOperand const *
 Operand<T>::operator*(IOperand const & rhs) const {
 
 	eOperandType type = (_type > rhs.getType()) ? _type : rhs.getType();
+	long double result;
+
 	try
 	{
-		long double result = std::stold(toString()) + std::stold(rhs.toString());
+		result = std::stold(toString()) + std::stold(rhs.toString());
 	} 
 	catch (std::exception &e) 
 	{

@@ -3,13 +3,15 @@
 
 #include <vector>
 #include <iostream>
+#include <regex>
 
-enum eTokenType {push, pop, dump, assert, add, sub, mul, div, mod, print, vmexit};
+//enum eTokenType {push, pop, dump, assert, add, sub, mul, div, mod, print, avmexit, comment, empty};
 
 extern int lineNumber;
 
 struct Token {
-	eTokenType	type;
+//	eTokenType	type;
+	std::string	type;
 	std::string	value;
 };
 
@@ -30,6 +32,11 @@ public:
 
 private:
 	std::vector<Token> _tokens;
+
+	std::regex intValPattern;
+	std::regex fractValPattern;
+	std::regex nonValPattern;
+
 };
 
 

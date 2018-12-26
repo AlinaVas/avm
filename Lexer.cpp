@@ -68,18 +68,20 @@ Lexer::readFromStdIn() {
 void
 Lexer::processInput() {
 
-	for (auto i = 0; i != _tokens.size(); i++)
+	bool exitCommand = false;
+
+	for (auto i = _tokens.begin(); i != _tokens.end(); i++)
 	{
-		if ((i == _tokens.size() - 1) && (_tokens[i].value != "exit"))
+		if ((i == _tokens.end()) && !exitCommand && (i->value != "exit"))
 			std::cout << "no exit instruction" << std::endl; //make exception class
-		try
-		{
-
+		if (std::regex_match(i->value, intValPattern)) {
+			if (i->value[0] == 'p')
+				
 		}
-		catch ()
-		{
 
-		}
+
+
+
 
 	}
 }

@@ -31,11 +31,11 @@ public:
 
 
 private:
-	std::vector<Token> _tokens;
+	std::vector<Token> 	_tokens;
 
-	std::regex intValPattern;
-	std::regex fractValPattern;
-	std::regex nonValPattern;
+	const std::regex	intValPattern;
+	const std::regex 	fractValPattern();
+	const std::regex 	nonValPattern;
 
 };
 

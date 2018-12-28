@@ -74,9 +74,15 @@ Lexer::processInput() {
 	{
 		if ((i == _tokens.end()) && !exitCommand && (i->value != "exit"))
 			std::cout << "no exit instruction" << std::endl; //make exception class
-		if (std::regex_match(i->value, intValPattern)) {
+
+		std::smatch result;
+		if (std::regex_search(i->value, result, intValPattern)) {
+			std::cout << result[0] << std::endl;
 			if (i->value[0] == 'p')
-				
+				i->type = "push";
+			if (i->value[0] == 'a')
+				i->type = "assert";
+//			i->value =
 		}
 
 

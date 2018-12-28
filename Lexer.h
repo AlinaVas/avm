@@ -34,7 +34,7 @@ private:
 	std::vector<Token> 	_tokens;
 
 	const std::regex	intValPattern;
-	const std::regex 	fractValPattern();
+	const std::regex 	fractValPattern;
 	const std::regex 	nonValPattern;
 
 };

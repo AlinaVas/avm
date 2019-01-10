@@ -126,6 +126,7 @@ Lexer::validateToken(Token &token) {
 	token.type.erase(token.type.find_last_not_of(' ') + 1);
 }
 
+
 /************************ EXCEPTIONS ****************************/
 
 Lexer::NoExitCommandExcepton::NoExitCommandExcepton() noexcept = default;

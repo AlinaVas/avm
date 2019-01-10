@@ -51,7 +51,7 @@ public:
 	};
 
 private:
-	std::vector<Token> _tokens;
+	std::vector<Token> 	_tokens;
 
 	std::regex integerValuePattern;
 	std::regex fractionalValuePattern;

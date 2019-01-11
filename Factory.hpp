@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AVM_FACTORY_H
+#define AVM_FACTORY_H
 
 #include "IOperand.hpp"
 #include <vector>
@@ -23,3 +24,5 @@ private:
 
 	std::vector<funcPtr> _vecOfFunc;
 };
+
+#endif

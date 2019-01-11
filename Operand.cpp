@@ -1,4 +1,4 @@
-#include "Operand.hpp"
+//#include "Operand.hpp"
 
 template <typename T>
 Operand<T>::Operand(std::string & value, eOperandType type, Factory *ptr) : _value(value), _type(type), _ptr(ptr) {}
@@ -10,7 +10,7 @@ Operand<T>::Operand(Operand<T> const & rhs) {
 }
 
 template <typename T>
-Operand<T>::~Operand() {}
+Operand<T>::~Operand() = default;
 
 template <typename T> std::string const &
 Operand<T>::toString() const { return _value; }

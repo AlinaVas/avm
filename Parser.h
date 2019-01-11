@@ -1,23 +1,25 @@
 #ifndef AVM_PARSER_H
 #define AVM_PARSER_H
 
+#include "Factory.hpp"
 #include "Lexer.h"
-#include "Operand.hpp"
+
 
 class Parser {
 
 public:
 	Parser() = delete;
-	Parser(std::vector<Token> &);
+	Parser(std::list<Token>);
 	Parser(Parser const &);
 	~Parser();
 	Parser &operator=(Parser const &);
 
-
+	void	initParsing();
+	void 	push();
 
 private:
-	std::vector<Token>		_tokens;
-	std::vector<IOperand*>	_stack;
+	std::list<Token>		_tokens;
+	std::list<IOperand*>	_stack;
 };
 
 

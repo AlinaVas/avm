@@ -1,10 +1,9 @@
 #include "Lexer.h"
 #include "Parser.h"
-//#include "AbstractVM.hpp"
 
 int main(int ac, char **av) {
 
-//	AbstractVM avm;
+//	AbstractVMExceptions avm;
 	Lexer lr;
 //	try {
 	lr.getInput(ac, av);
@@ -13,4 +12,5 @@ int main(int ac, char **av) {
 //	}
 	Parser pr(lr.getTokens());
 
+	pr.initParsing();
 }

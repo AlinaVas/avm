@@ -1,6 +1,6 @@
 #include "Parser.h"
 
-Parser::Parser(std::list<Token> tokens) : _tokens(std::move(tokens)) {}
+Parser::Parser(std::vector<Token> tokens) : _tokens(std::move(tokens)) {}
 
 Parser::Parser(Parser const &rhs) {
 	*this = rhs;
@@ -29,5 +29,5 @@ Parser::initParsing() {
 
 void
 Parser::push() {
-//	_stack.push_front(Factory().createOperand());
+	_stack.push_front(Factory().createOperand());
 }

@@ -32,7 +32,7 @@ public:
 	void readFromStdIn();
 	void validateToken(Token &);
 
-	std::list<Token> getTokens() const;
+	std::vector<Token> getTokens() const;
 
 	class NoExitCommandException : public std::exception {
 
@@ -55,7 +55,7 @@ public:
 	};
 
 private:
-	std::list<Token> 	_tokens;
+	std::vector<Token> 	_tokens;
 
 	std::regex integerValuePattern;
 	std::regex fractionalValuePattern;

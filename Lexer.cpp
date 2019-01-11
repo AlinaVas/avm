@@ -82,8 +82,8 @@ Lexer::readFromFile(char *fileName) {
 	for (int i = 0; std::getline(file, line); i++)
 	{
 		_tokens.emplace_back();
-		_tokens.back().operandValue = line;
-		_tokens.back().lineNumber = i + 1;
+		_tokens[i].operandValue = line;
+		_tokens[i].lineNumber = i + 1;
 	}
 	file.close();
 }
@@ -96,8 +96,8 @@ Lexer::readFromStdIn() {
 	for (int i = 0; std::getline(std::cin, line) && line != ";;"; i++)
 	{
 		_tokens.emplace_back();
-		_tokens.back().operandValue = line;
-		_tokens.back().lineNumber = i + 1;
+		_tokens[i].operandValue = line;
+		_tokens[i].lineNumber = i + 1;
 	}
 }
 
@@ -153,7 +153,7 @@ Lexer::validateToken(Token &token) {
 	}
 }
 
-std::list<Token>
+std::vector<Token>
 Lexer::getTokens() const { return _tokens; }
 
 /************************ EXCEPTIONS ****************************/

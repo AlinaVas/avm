@@ -9,7 +9,7 @@ class Parser {
 
 public:
 	Parser() = delete;
-	Parser(std::list<Token>);
+	Parser(std::vector<Token>);
 	Parser(Parser const &);
 	~Parser();
 	Parser &operator=(Parser const &);
@@ -18,7 +18,7 @@ public:
 	void 	push();
 
 private:
-	std::list<Token>		_tokens;
+	std::vector<Token>		_tokens;
 	std::list<IOperand*>	_stack;
 };
 

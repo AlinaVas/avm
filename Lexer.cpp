@@ -4,9 +4,9 @@
 //int lineNumber = 0;
 
 Lexer::Lexer() {
-	integerValuePattern = "^(push|assert) (int16|int8|int32)\\([-]?\\d+\\)\\s*(;.*)?$";
-	fractionalValuePattern = "^(push|assert) (float|double)\\([-]?\\d+\\.\\d+\\)\\s*(;.*)?$";
-	noValuePattern = "^(pop|dump|add|sub|mul|div|mod|print|exit)\\s*(;.*)?$";
+	integerValuePattern = "^(PUSH|ASSERT) (int16|int8|int32)\\([-]?\\d+\\)\\s*(;.*)?$";
+	fractionalValuePattern = "^(PUSH|ASSERT) (float|double)\\([-]?\\d+\\.\\d+\\)\\s*(;.*)?$";
+	noValuePattern = "^(POP|DUMP|add|sub|mul|div|mod|print|exit)\\s*(;.*)?$";
 	emptyLinePattern = "^ *$";
 };
 
@@ -53,12 +53,12 @@ Lexer::getInput(int ac, char **av) {
 		{
 			std::cerr << "Error: line " << t.lineNumber << ": " << e.what() << std::endl;
 		}
-		if (t.type == "exit")
+		if (t.commandType == EXIT)
 			exitCommand = true;
 		try
 		{
 			if (&t == &_tokens.back() && !exitCommand)
-				throw Lexer::NoExitCommandExcepton();
+				throw Lexer::NoExitCommandException();
 		}
 		catch (std::exception const &e)
 		{
@@ -68,7 +68,7 @@ Lexer::getInput(int ac, char **av) {
 		}
 
 		//delete empty tokens???
-		std::cout << t.value << std::endl;
+		std::cout << t.operandValue << std::endl;
 	}
 }
 
@@ -82,8 +82,8 @@ Lexer::readFromFile(char *fileName) {
 	for (int i = 0; std::getline(file, line); i++)
 	{
 		_tokens.emplace_back();
-		_tokens[i].value = line;
-		_tokens[i].lineNumber = i + 1;
+		_tokens.back().operandValue = line;
+		_tokens.back().lineNumber = i + 1;
 	}
 	file.close();
 }
@@ -96,8 +96,8 @@ Lexer::readFromStdIn() {
 	for (int i = 0; std::getline(std::cin, line) && line != ";;"; i++)
 	{
 		_tokens.emplace_back();
-		_tokens[i].value = line;
-		_tokens[i].lineNumber = i + 1;
+		_tokens.back().operandValue = line;
+		_tokens.back().lineNumber = i + 1;
 	}
 }
 
@@ -105,45 +105,74 @@ void
 Lexer::validateToken(Token &token) {
 
 	/* remove comment if exists */
-	if (token.value.find(';') != std::string::npos)
-		token.value.erase(token.value.find(';'));
+	if (token.operandValue.find(';') != std::string::npos)
+		token.operandValue.erase(token.operandValue.find(';'));
 
-	if (std::regex_match(token.value, integerValuePattern) || std::regex_match(token.value, fractionalValuePattern)) {
-		if (token.value[0] == 'p')
-			token.type = "push";
-		if (token.value[0] == 'a')
-			token.type = "assert";
-		token.value.erase(0, token.type.size() + 1);
+	if (std::regex_match(token.operandValue, integerValuePattern) || std::regex_match(token.operandValue, fractionalValuePattern)) {
+		if (token.operandValue[0] == 'p')
+			token.commandType = PUSH;
+		if (token.operandValue[0] == 'a')
+			token.commandType = ASSERT;
+		token.operandValue.erase(0, token.operandValue.find(' ') + 1);
+		if (token.operandValue.compare(0, 4, "int8"))
+			token.operandType = Int8;
+		if (token.operandValue.compare(0, 5, "int16"))
+			token.operandType = Int16;
+		if (token.operandValue.compare(0, 5, "int32"))
+			token.operandType = Int32;
+		if (token.operandValue.compare(0, 5, "float"))
+			token.operandType = Float;
+		if (token.operandValue.compare(0, 6, "double"))
+			token.operandType = Double;
+		token.operandValue.erase(0, token.operandValue.find('(') + 1);
+		token.operandValue.erase(token.operandValue.find(')'));
 	}
-	else if (std::regex_match(token.value, noValuePattern)) {
-		token.value.swap(token.type);
+	else if (std::regex_match(token.operandValue, noValuePattern)) {
+		if (token.operandValue.compare(0, 3, "pop"))
+			token.commandType = POP;
+		if (token.operandValue.compare(0, 3, "dump"))
+			token.commandType = DUMP;
+		if (token.operandValue.compare(0, 3, "add"))
+			token.commandType = ADD;
+		if (token.operandValue.compare(0, 3, "sub"))
+			token.commandType = SUB;
+		if (token.operandValue.compare(0, 3, "mul"))
+			token.commandType = MUL;
+		if (token.operandValue.compare(0, 3, "div"))
+			token.commandType = DIV;
+		if (token.operandValue.compare(0, 3, "mod"))
+			token.commandType = MOD;
+		if (token.operandValue.compare(0, 3, "print"))
+			token.commandType = PRINT;
+		if (token.operandValue.compare(0, 3, "exit"))
+			token.commandType = EXIT;
+		token.operandValue.clear();
 	}
-	else if (!std::regex_match(token.value, emptyLinePattern)) {
+	else if (!std::regex_match(token.operandValue, emptyLinePattern)) {
 		throw Lexer::LexicalErrorException();
 	}
-
-	/* trim token type string */
-	token.type.erase(token.type.find_last_not_of(' ') + 1);
 }
 
+std::list<Token>
+Lexer::getTokens() const { return _tokens; }
 
 /************************ EXCEPTIONS ****************************/
 
-Lexer::NoExitCommandExcepton::NoExitCommandExcepton() noexcept = default;
+Lexer::NoExitCommandException::NoExitCommandException() noexcept = default;
 
-Lexer::NoExitCommandExcepton::NoExitCommandExcepton(NoExitCommandExcepton const &rhs) noexcept {
+Lexer::NoExitCommandException::NoExitCommandException(NoExitCommandException const &rhs) noexcept {
 	*this = rhs;
 }
 
-Lexer::NoExitCommandExcepton::~NoExitCommandExcepton() = default;
+Lexer::NoExitCommandException::~NoExitCommandException() = default;
 
-Lexer::NoExitCommandExcepton
-&Lexer::NoExitCommandExcepton::operator=(Lexer::NoExitCommandExcepton const &rhs) noexcept {
+Lexer::NoExitCommandException
+&Lexer::NoExitCommandException::operator=(Lexer::NoExitCommandException const &rhs) noexcept {
 	(void)rhs;
 	return *this;
 }
 
-const char *Lexer::NoExitCommandExcepton::what() const noexcept {
+const char *Lexer::NoExitCommandException::what() const noexcept {
 	return ("no exit command");
 }
 

@@ -1,19 +1,21 @@
 #ifndef AVM_LEXER_H
 #define AVM_LEXER_H
 
-#include <vector>
-#include <iostream>
 #include <regex>
+#include <list>
+#include <iostream>
+#include "IOperand.hpp"
 
-//enum eTokenType {push, pop, dump, assert, add, sub, mul, div, mod, print, avmexit, comment, empty};
+enum eTokenType {PUSH, POP, DUMP, ASSERT, ADD, SUB, MUL, DIV, MOD, PRINT, EXIT};
 
 //extern int lineNumber;
 
 struct Token {
-//	eTokenType	type;
-	int			lineNumber;
-	std::string	type;
-	std::string	value;
+	int				lineNumber;
+	eTokenType		commandType;
+//	std::string		commandType;
+	std::string		operandValue;
+	eOperandType 	operandType;
 };
 
 class Lexer {
@@ -30,13 +32,15 @@ public:
 	void readFromStdIn();
 	void validateToken(Token &);
 
-	class NoExitCommandExcepton : public std::exception {
+	std::list<Token> getTokens() const;
+
+	class NoExitCommandException : public std::exception {
 
 	public:
-		NoExitCommandExcepton() noexcept;
-		NoExitCommandExcepton(NoExitCommandExcepton const &) noexcept;
-		virtual ~NoExitCommandExcepton();
-		NoExitCommandExcepton &operator=(NoExitCommandExcepton const &) noexcept;
+		NoExitCommandException() noexcept;
+		NoExitCommandException(NoExitCommandException const &) noexcept;
+		virtual ~NoExitCommandException();
+		NoExitCommandException &operator=(NoExitCommandException const &) noexcept;
 		virtual const char *what() const noexcept ;
 	};
 
@@ -51,7 +55,7 @@ public:
 	};
 
 private:
-	std::vector<Token> 	_tokens;
+	std::list<Token> 	_tokens;
 
 	std::regex integerValuePattern;
 	std::regex fractionalValuePattern;

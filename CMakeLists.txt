@@ -4,6 +4,6 @@ project(AVM)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -std=c++11")
 
-set(SRC Lexer.cpp main.cpp Parser.cpp Parser.h)
+set(SRC Lexer.cpp main.cpp Parser.cpp Factory.cpp)
 
 add_executable(avm ${SRC})

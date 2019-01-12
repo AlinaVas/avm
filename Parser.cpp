@@ -20,14 +20,14 @@ Parser::operator=(Parser const &rhs) {
 void
 Parser::initParsing() {
 
-	for (auto &t : _tokens) {
+	for (size_t i = 0; i < _tokens.size(); i++) {
 
-		if (t.commandType == PUSH)
-			push();
+		if (_tokens[i].commandType == PUSH)
+			push(i);
 	}
 }
 
 void
-Parser::push() {
-	_stack.push_front(Factory().createOperand());
+Parser::push(size_t &i) {
+	_stack.push_front(Factory().createOperand(_tokens[i].operandType, _tokens[i].operandValue));
 }

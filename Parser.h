@@ -15,11 +15,11 @@ public:
 	Parser &operator=(Parser const &);
 
 	void	initParsing();
-	void 	push();
+	void 	push(size_t &);
 
 private:
-	std::vector<Token>		_tokens;
-	std::list<IOperand*>	_stack;
+	std::vector<Token>			_tokens;
+	std::list<IOperand const*>	_stack;
 };
 
 

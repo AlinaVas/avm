@@ -26,7 +26,7 @@ public:
 	void 	push(size_t &);
 	void	pop(size_t &);
 	void	dump(size_t &);
-	void	asrt(size_t &);
+	void	assrt(size_t &);
 	void	add(size_t &);
 	void	sub(size_t &);
 	void	mul(size_t &);
@@ -34,6 +34,20 @@ public:
 	void	mod(size_t &);
 	void	print(size_t &);
 	void	quit(size_t &);
+
+	class ParsingErrorException : public std::exception {
+
+	public:
+		ParsingErrorException() noexcept = delete;
+		ParsingErrorException(char const *) noexcept;
+		ParsingErrorException(ParsingErrorException const &) noexcept;
+		virtual ~ParsingErrorException();
+		ParsingErrorException &operator=(ParsingErrorException const &) noexcept;
+		virtual const char *what() const noexcept;
+
+	private:
+		char const  *_msg;
+	};
 
 
 private:

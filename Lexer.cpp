@@ -6,7 +6,7 @@
 Lexer::Lexer() {
 	integerValuePattern = R"delim(^(push|assert) (int16|int8|int32)(\([-]?[[:digit:]]+\))[[:blank:]]*(;.*)?$)delim";
 	fractionalValuePattern = R"delim(^(push|assert) (float|double)(\([-]?[[:digit:]]+\.[[:digit:]]+\))[[:blank:]]*(;.*)?$)delim";
-	noValuePattern = R"delim(pop|dump|add|sub|mul|div|mod|print|exit)[[:blank:]]*(;.*)?$)delim";
+	noValuePattern = R"delim(^(pop|dump|add|sub|mul|div|mod|print|exit)[[:blank:]]*(;.*)?$)delim";
 	emptyLinePattern = "^ *$";
 };
 

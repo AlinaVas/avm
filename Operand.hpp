@@ -24,7 +24,12 @@ public:
 		return 0;
 	}
 
-	std::string const 	&toString() const override { return _value; }
+	std::string 	 	&toString() const override { return _value; }
+
+	T					toNumber() const {
+
+		return static_cast<T>(std::stod(_value));
+	}
 
 	Operand				&operator=(Operand const & rhs) {
 

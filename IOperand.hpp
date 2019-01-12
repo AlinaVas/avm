@@ -9,8 +9,8 @@ class IOperand {
 
 public:
 
-	virtual int				getPrecision( void ) const = 0; // Precision of the commandType of the instance
-	virtual eOperandType	getType( void ) const = 0;  // Type of the instance
+	virtual int				getPrecision() const = 0; // Precision of the commandType of the instance
+	virtual eOperandType	getType() const = 0;  // Type of the instance
 
 	virtual IOperand const * operator+(IOperand const & rhs) const = 0;
 	virtual IOperand const * operator-(IOperand const & rhs) const = 0;
@@ -18,7 +18,7 @@ public:
 //	virtual IOperand const * operator/(IOperand const & rhs) const = 0;
 //	virtual IOperand const * operator%(IOperand const & rhs) const = 0;
 
-	virtual std::string const & toString( void ) const = 0; // String representation of the instance
+	virtual std::string const & toString() const = 0; // String representation of the instance
 	
-	virtual ~IOperand( void ) {} 
+	virtual ~IOperand() {}
 };

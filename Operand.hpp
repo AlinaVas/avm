@@ -3,8 +3,6 @@
 #include "IOperand.hpp"
 #include "Factory.hpp"
 
-//class Factory;
-
 template <typename T>
 class Operand : public IOperand {
 
@@ -12,12 +10,12 @@ public:
 
 	Operand() = delete;
 	Operand(std::string const & value, eOperandType type, Factory const * ptr) : _value(value), _type(type), _ptr(ptr) {}
-	Operand(Operand const & rhs) { *this = rhs; }
-	~Operand() = default;
+	Operand(Operand const & rhs) : _value(rhs._value), _type(rhs._type), _ptr(rhs._ptr) {}
+	~Operand() override = default;
 
-	eOperandType		getType() const { return _type; }
+	eOperandType		getType() const override { return _type; }
 
-	int					getPrecision() const {
+	int					getPrecision() const override {
 
 		if (_type == Float)
 			return 6;
@@ -26,7 +24,7 @@ public:
 		return 0;
 	}
 
-	std::string const 	&toString() const { return _value; }
+	std::string const 	&toString() const override { return _value; }
 
 	Operand				&operator=(Operand const & rhs) {
 
@@ -38,7 +36,7 @@ public:
 		return *this;
 	}
 
-	IOperand const * operator+(IOperand const & rhs) const {
+	IOperand const * operator+(IOperand const & rhs) const override {
 
 		eOperandType type = (_type > rhs.getType()) ? _type : rhs.getType();
 		long double result;
@@ -57,7 +55,7 @@ public:
 	}
 
 
-	IOperand const * operator-(IOperand const & rhs) const {
+	IOperand const * operator-(IOperand const & rhs) const override {
 
 		eOperandType type = (_type > rhs.getType()) ? _type : rhs.getType();
 		long double result;
@@ -77,7 +75,7 @@ public:
 	}
 
 
-	IOperand const * operator*(IOperand const & rhs) const {
+	IOperand const * operator*(IOperand const & rhs) const override {
 
 		eOperandType type = (_type > rhs.getType()) ? _type : rhs.getType();
 		long double result;
@@ -96,8 +94,8 @@ public:
 	}
 
 
-//	IOperand const * operator/(IOperand const & rhs) const;
-//	IOperand const * operator%(IOperand const & rhs) const;
+//	IOperand const * operator/(IOperand const & rhs) const override;
+//	IOperand const * operator%(IOperand const & rhs) const override;
 
 private:
 

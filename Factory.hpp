@@ -6,7 +6,7 @@
 
 class Factory {
 
-	typedef IOperand const * (Factory::*funcPtr)(std::string const &);
+	typedef IOperand const * (Factory::*funcPtr)(std::string const &) const;
 
 public:
 

@@ -1,4 +1,5 @@
 #include "Factory.hpp"
+#include "Operand.hpp"
 
 Factory::Factory() {
 
@@ -12,7 +13,9 @@ Factory::Factory() {
 IOperand const * 
 Factory::createOperand(eOperandType type, std::string const & value) const {
 
-	return _vecOfFunc[type](value);
+//	IOperand const* (Factory::*f)(std::string const & value) const;
+//	funcPtr f = _vecOfFunc[type];
+	return (this->*_vecOfFunc[type])(value);
 }
 
 IOperand const *

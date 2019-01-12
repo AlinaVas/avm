@@ -4,9 +4,9 @@
 //int lineNumber = 0;
 
 Lexer::Lexer() {
-	integerValuePattern = "^(PUSH|ASSERT) (int16|int8|int32)\\([-]?\\d+\\)\\s*(;.*)?$";
-	fractionalValuePattern = "^(PUSH|ASSERT) (float|double)\\([-]?\\d+\\.\\d+\\)\\s*(;.*)?$";
-	noValuePattern = "^(POP|DUMP|add|sub|mul|div|mod|print|exit)\\s*(;.*)?$";
+	integerValuePattern = R"delim(^(push|assert) (int16|int8|int32)(\([-]?[[:digit:]]+\))[[:blank:]]*(;.*)?$)delim";
+	fractionalValuePattern = R"delim(^(push|assert) (float|double)(\([-]?[[:digit:]]+\.[[:digit:]]+\))[[:blank:]]*(;.*)?$)delim";
+	noValuePattern = R"delim(pop|dump|add|sub|mul|div|mod|print|exit)[[:blank:]]*(;.*)?$)delim";
 	emptyLinePattern = "^ *$";
 };
 
@@ -68,7 +68,7 @@ Lexer::getInput(int ac, char **av) {
 		}
 
 		//delete empty tokens???
-		std::cout << t.operandValue << std::endl;
+		std::cout <<t.lineNumber << ": command " << t.commandType << " | opType " << t.operandType << " | opVal " << t.operandValue << std::endl;
 	}
 }
 
@@ -114,43 +114,44 @@ Lexer::validateToken(Token &token) {
 		if (token.operandValue[0] == 'a')
 			token.commandType = ASSERT;
 		token.operandValue.erase(0, token.operandValue.find(' ') + 1);
-		if (token.operandValue.compare(0, 4, "int8"))
+		if (!token.operandValue.compare(0, 4, "int8"))
 			token.operandType = Int8;
-		if (token.operandValue.compare(0, 5, "int16"))
+		if (!token.operandValue.compare(0, 5, "int16"))
 			token.operandType = Int16;
-		if (token.operandValue.compare(0, 5, "int32"))
+		if (!token.operandValue.compare(0, 5, "int32"))
 			token.operandType = Int32;
-		if (token.operandValue.compare(0, 5, "float"))
+		if (!token.operandValue.compare(0, 5, "float"))
 			token.operandType = Float;
-		if (token.operandValue.compare(0, 6, "double"))
+		if (!token.operandValue.compare(0, 6, "double"))
 			token.operandType = Double;
 		token.operandValue.erase(0, token.operandValue.find('(') + 1);
 		token.operandValue.erase(token.operandValue.find(')'));
 	}
 	else if (std::regex_match(token.operandValue, noValuePattern)) {
-		if (token.operandValue.compare(0, 3, "pop"))
+		if (!token.operandValue.compare(0, 3, "pop"))
 			token.commandType = POP;
-		if (token.operandValue.compare(0, 3, "dump"))
+		if (!token.operandValue.compare(0, 4, "dump"))
 			token.commandType = DUMP;
-		if (token.operandValue.compare(0, 3, "add"))
+		if (!token.operandValue.compare(0, 3, "add"))
 			token.commandType = ADD;
-		if (token.operandValue.compare(0, 3, "sub"))
+		if (!token.operandValue.compare(0, 3, "sub"))
 			token.commandType = SUB;
-		if (token.operandValue.compare(0, 3, "mul"))
+		if (!token.operandValue.compare(0, 3, "mul"))
 			token.commandType = MUL;
-		if (token.operandValue.compare(0, 3, "div"))
+		if (!token.operandValue.compare(0, 3, "div"))
 			token.commandType = DIV;
-		if (token.operandValue.compare(0, 3, "mod"))
+		if (!token.operandValue.compare(0, 3, "mod"))
 			token.commandType = MOD;
-		if (token.operandValue.compare(0, 3, "print"))
+		if (!token.operandValue.compare(0, 5, "print"))
 			token.commandType = PRINT;
-		if (token.operandValue.compare(0, 3, "exit"))
+		if (!token.operandValue.compare(0, 4, "exit"))
 			token.commandType = EXIT;
 		token.operandValue.clear();
 	}
-	else if (!std::regex_match(token.operandValue, emptyLinePattern)) {
+	else if (std::regex_match(token.operandValue, emptyLinePattern))
+		token.commandType = EMPTY;
+	else
 		throw Lexer::LexicalErrorException();
-	}
 }
 
 std::vector<Token>

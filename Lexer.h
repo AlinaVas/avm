@@ -6,14 +6,11 @@
 #include <iostream>
 #include "IOperand.hpp"
 
-enum eTokenType {PUSH, POP, DUMP, ASSERT, ADD, SUB, MUL, DIV, MOD, PRINT, EXIT};
-
-//extern int lineNumber;
+enum eCommandType {PUSH, POP, DUMP, ASSERT, ADD, SUB, MUL, DIV, MOD, PRINT, EXIT, EMPTY};
 
 struct Token {
 	int				lineNumber;
-	eTokenType		commandType;
-//	std::string		commandType;
+	eCommandType	commandType;
 	std::string		operandValue;
 	eOperandType 	operandType;
 };

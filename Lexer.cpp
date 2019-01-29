@@ -8,6 +8,7 @@ Lexer::Lexer() {
 	fractionalValuePattern = R"delim(^(push|assert) (float|double)(\([-]?[[:digit:]]+\.[[:digit:]]+\))[[:blank:]]*(;.*)?$)delim";
 	noValuePattern = R"delim(^(pop|dump|add|sub|mul|div|mod|print|exit)[[:blank:]]*(;.*)?$)delim";
 	emptyLinePattern = "^ *$";
+	_errorsCount = 0;
 };
 
 Lexer::Lexer(const Lexer &rhs) {
@@ -26,6 +27,7 @@ Lexer::operator=(Lexer const &rhs) {
 		fractionalValuePattern = rhs.fractionalValuePattern;
 		noValuePattern = rhs.noValuePattern;
 		emptyLinePattern = rhs.emptyLinePattern;
+		_errorsCount = rhs._errorsCount;
 	}
 	return *this;
 }
@@ -39,6 +41,7 @@ Lexer::getInput(int ac, char **av) {
 	}
 	catch (std::exception const &e)
 	{
+		_errorsCount++;
 		std::cerr << "Error: " << e.what() << std::endl;
 	}
 
@@ -51,6 +54,7 @@ Lexer::getInput(int ac, char **av) {
 		}
 		catch (std::exception const &e)
 		{
+			_errorsCount++;
 			std::cerr << "Error: line " << t.lineNumber << ": " << e.what() << std::endl;
 		}
 		if (t.commandType == EXIT)
@@ -62,14 +66,13 @@ Lexer::getInput(int ac, char **av) {
 		}
 		catch (std::exception const &e)
 		{
-
+			_errorsCount++;
 			std::cerr << "Error: " << e.what() << std::endl;
-			exit(-1);
 		}
-
-		//delete empty tokens???
-		std::cout <<t.lineNumber << ": command " << t.commandType << " | opType " << t.operandType << " | opVal " << t.operandValue << std::endl;
+//		std::cout <<t.lineNumber << ": command " << t.commandType << " | opType " << t.operandType << " | opVal " << t.operandValue << std::endl;
 	}
+	if (_errorsCount)
+		exit(-1);
 }
 
 void

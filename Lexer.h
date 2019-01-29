@@ -59,6 +59,7 @@ private:
 	std::regex noValuePattern;
 	std::regex emptyLinePattern;
 
+	int _errorsCount;
 };
 
 

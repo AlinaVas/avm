@@ -39,7 +39,7 @@ Parser::initParsing() {
 				(this->*_commands[_tokens[i].commandType])(i);
 		}
 		catch (std::exception &e) {
-			std::cerr << RED << "Line " << i + 1 << ": " << e.what() << RESET << std::endl;
+			std::cerr << RED << "Error: line " << i + 1 << ": " << e.what() << RESET << std::endl;
 			quit(i);
 		}
 	}
@@ -66,7 +66,10 @@ Parser::dump(size_t &) {
 	else {
 		std::cout << YELLOW << "=== Content of stack ===" << RESET << std::endl;
 		for (auto &it : _stack) {
-			std::cout << YELLOW << typeName[it->getType()] << "(" << std::stold(it->toString()) << ")" << RESET << std::endl;
+			std::string val(it->toString());
+			if (it->getType() != Float && it->getType() != Double && val.find('.') != std::string::npos)
+				val.erase(val.begin() + val.find('.'), val.end());
+			std::cout << YELLOW << typeName[it->getType()] << "(" << val << ")" << RESET << std::endl;
 		}
 		std::cout << YELLOW << "========================" << RESET << std::endl;
 	}

@@ -90,7 +90,7 @@ public:
 
 private:
 
-	std::string	const	_value;
+	std::string const	_value;
 	eOperandType const	_type;
 
 	Factory const 		*_ptr;

@@ -14,8 +14,6 @@ Factory::Factory() {
 IOperand const * 
 Factory::createOperand(eOperandType type, std::string const & value) const {
 
-//	IOperand const* (Factory::*f)(std::string const & value) const;
-//	funcPtr f = _vecOfFunc[type];
 	return (this->*_vecOfFunc[type])(value);
 }
 
@@ -24,9 +22,8 @@ Factory::createInt8(std::string const & value) const {
 
     auto val = std::stold(value);
     if (val < std::numeric_limits<int8_t>::min() || val > std::numeric_limits<int8_t>::max())
-        throw ValueOutOfRangeException("value overflow (int8_t)");
+        throw OverflowErrorException("int8 value overflow");
 	return new Operand<int8_t>(value, Int8, this);
-
 }
 
 IOperand const *
@@ -34,7 +31,7 @@ Factory::createInt16(std::string const & value) const {
 
 	auto val = std::stold(value);
 	if (val < std::numeric_limits<int16_t>::min() || val > std::numeric_limits<int16_t>::max())
-		throw ValueOutOfRangeException("value overflow (int16_t)");
+		throw OverflowErrorException("int16 value overflow");
 	return new Operand<int16_t>(value, Int16, this);
 }
 
@@ -43,7 +40,7 @@ Factory::createInt32(std::string const & value) const {
 
 	auto val = std::stold(value);
 	if (val < std::numeric_limits<int32_t>::min() || val > std::numeric_limits<int32_t>::max())
-		throw ValueOutOfRangeException("value overflow (int32_t)");
+		throw OverflowErrorException("int32 value overflow");
 	return new Operand<int32_t>(value, Int32, this);
 }
 
@@ -52,9 +49,9 @@ Factory::createFloat(std::string const & value) const {
 
 	auto val = std::stold(value);
 	if (val < -std::numeric_limits<float>::max() || val > std::numeric_limits<float>::max())
-		throw ValueOutOfRangeException("value overflow (float)");
+		throw OverflowErrorException("float value overflow");
 	if (val < std::numeric_limits<float>::min())
-		throw ValueOutOfRangeException("value underflow (float)");
+		throw UnderflowErrorException("float value underflow");
 	return new Operand<float>(value, Float, this);
 }
 
@@ -63,28 +60,49 @@ Factory::createDouble(std::string const & value) const {
 
 	auto val = std::stold(value);
 	if (val < -std::numeric_limits<double>::max() || val > std::numeric_limits<double>::max())
-		throw ValueOutOfRangeException("value overflow (double)");
+		throw OverflowErrorException("double value overflow");
 	if (val < std::numeric_limits<double>::min())
-		throw ValueOutOfRangeException("value underflow (double)");
+		throw UnderflowErrorException("double value underflow");
 	return new Operand<double>(value, Double, this);
 }
 
 /************************ EXCEPTIONS ****************************/
 
-Factory::ValueOutOfRangeException::ValueOutOfRangeException(char const *msg) noexcept : _msg(msg) {}
+Factory::OverflowErrorException::OverflowErrorException(char const *msg) noexcept : std::overflow_error(msg), _msg(msg) {}
 
-Factory::ValueOutOfRangeException::ValueOutOfRangeException(ValueOutOfRangeException const &rhs) noexcept {
+Factory::OverflowErrorException::OverflowErrorException(OverflowErrorException const &rhs) noexcept : std::overflow_error(rhs._msg) {
 	*this = rhs;
 }
 
-Factory::ValueOutOfRangeException::~ValueOutOfRangeException() = default;
+Factory::OverflowErrorException::~OverflowErrorException() = default;
 
-Factory::ValueOutOfRangeException
-&Factory::ValueOutOfRangeException::operator=(Factory::ValueOutOfRangeException const &rhs) noexcept {
+Factory::OverflowErrorException
+&Factory::OverflowErrorException::operator=(Factory::OverflowErrorException const &rhs) noexcept {
 	(void)rhs;
 	return *this;
 }
 
-const char *Factory::ValueOutOfRangeException::what() const noexcept {
+const char *Factory::OverflowErrorException::what() const noexcept {
+	return _msg;
+}
+
+
+/************************ EXCEPTIONS ****************************/
+
+Factory::UnderflowErrorException::UnderflowErrorException(char const *msg) noexcept : std::range_error(msg), _msg(msg) {}
+
+Factory::UnderflowErrorException::UnderflowErrorException(UnderflowErrorException const &rhs) noexcept : std::range_error(rhs._msg) {
+	*this = rhs;
+}
+
+Factory::UnderflowErrorException::~UnderflowErrorException() = default;
+
+Factory::UnderflowErrorException
+&Factory::UnderflowErrorException::operator=(Factory::UnderflowErrorException const &rhs) noexcept {
+	(void)rhs;
+	return *this;
+}
+
+const char *Factory::UnderflowErrorException::what() const noexcept {
 	return _msg;
 }

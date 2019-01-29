@@ -28,11 +28,6 @@ public:
 
 	std::string const 	&toString() const override { return _value; }
 
-	T					toNumber() const {
-
-		return static_cast<T>(std::stod(_value));
-	}
-
 	Operand				&operator=(Operand const & rhs) {
 
 		if (this == &rhs)
@@ -47,7 +42,6 @@ public:
 
 		eOperandType type = (_type > rhs.getType()) ? _type : rhs.getType();
 		long double result = std::stold(toString()) + std::stold(rhs.toString());
-//		return _ptr->createOperand(type, std::to_string(result));
 		return Factory().createOperand(type, std::to_string(result));
 	}
 

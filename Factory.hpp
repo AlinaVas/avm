@@ -14,19 +14,33 @@ public:
 
 	IOperand const * createOperand(eOperandType type, std::string const & value) const;
 
-    class ValueOutOfRangeException : public std::exception {
+	class OverflowErrorException : public std::overflow_error {
 
-    public:
-        ValueOutOfRangeException() = delete;
-        ValueOutOfRangeException(char const *) noexcept;
-        ValueOutOfRangeException(ValueOutOfRangeException const &) noexcept;
-        virtual ~ValueOutOfRangeException();
-        ValueOutOfRangeException &operator=(ValueOutOfRangeException const &) noexcept;
-        virtual const char *what() const noexcept;
+	public:
+		OverflowErrorException() = delete;
+		OverflowErrorException(char const *) noexcept;
+		OverflowErrorException(OverflowErrorException const &) noexcept;
+		virtual ~OverflowErrorException();
+		OverflowErrorException &operator=(OverflowErrorException const &) noexcept;
+		virtual const char *what() const noexcept;
 
-    private:
-        char const  *_msg;
-    };
+	private:
+		char const  *_msg;
+	};
+
+	class UnderflowErrorException : public std::range_error {
+
+	public:
+		UnderflowErrorException() = delete;
+		UnderflowErrorException(char const *) noexcept;
+		UnderflowErrorException(UnderflowErrorException const &) noexcept;
+		virtual ~UnderflowErrorException();
+		UnderflowErrorException &operator=(UnderflowErrorException const &) noexcept;
+		virtual const char *what() const noexcept;
+
+	private:
+		char const  *_msg;
+	};
 
 private:
 

@@ -67,8 +67,10 @@ Parser::dump(size_t &) {
 		std::cout << YELLOW << "=== Content of stack ===" << RESET << std::endl;
 		for (auto &it : _stack) {
 			std::string val(it->toString());
-			if (it->getType() != Float && it->getType() != Double && val.find('.') != std::string::npos)
+			if (it->getType() != Float && it->getType() != Double && val.find('.') != std::string::npos) {
 				val.erase(val.begin() + val.find('.'), val.end());
+			} else if (it->getType() == Float || it->getType() == Double)
+				val.erase(val.begin() + val.find_last_not_of('0') + 1, val.end());
 			std::cout << YELLOW << typeName[it->getType()] << "(" << val << ")" << RESET << std::endl;
 		}
 		std::cout << YELLOW << "========================" << RESET << std::endl;
@@ -105,7 +107,7 @@ void Parser::sub(size_t &) {
 	_stack.pop_front();
 	auto op2 = _stack.front();
 	_stack.pop_front();
-	_stack.push_front(*op1 - *op2);
+	_stack.push_front(*op2 - *op1);
 	delete op1;
 	delete op2;
 }
@@ -130,7 +132,7 @@ void Parser::div(size_t &) {
 	auto op2 = _stack.front();
 	_stack.pop_front();
 	try {
-		_stack.push_front(*op1 / *op2);
+		_stack.push_front(*op2 / *op1);
 		if (_stack.front() == nullptr)
 			throw ParsingErrorException("division by 0");
 	} catch (std::exception &e) {
@@ -150,7 +152,7 @@ void Parser::mod(size_t &) {
 	auto op2 = _stack.front();
 	_stack.pop_front();
 	try {
-		_stack.push_front(*op1 % *op2);
+		_stack.push_front(*op2 % *op1);
 		if (_stack.front() == nullptr)
 			throw ParsingErrorException("modulo by 0");
 	} catch (std::exception &e) {
@@ -171,11 +173,8 @@ void Parser::print(size_t &) {
 
 void Parser::quit(size_t &i) {
 	for (auto i = _stack.begin(); i != _stack.end(); i++) {
-		if (*i) {
-		    std::cout << "here\n";
+		if (*i)
             delete *i;
-		}
-
 	}
 	i ? exit(-1) : exit(0);
 }

@@ -14,6 +14,20 @@ public:
 
 	IOperand const * createOperand(eOperandType type, std::string const & value) const;
 
+    class ValueOutOfRangeException : public std::exception {
+
+    public:
+        ValueOutOfRangeException() = delete;
+        ValueOutOfRangeException(char const *) noexcept;
+        ValueOutOfRangeException(ValueOutOfRangeException const &) noexcept;
+        virtual ~ValueOutOfRangeException();
+        ValueOutOfRangeException &operator=(ValueOutOfRangeException const &) noexcept;
+        virtual const char *what() const noexcept;
+
+    private:
+        char const  *_msg;
+    };
+
 private:
 
 	IOperand const * createInt8(std::string const & value) const;

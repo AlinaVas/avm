@@ -3,6 +3,8 @@
 #include "IOperand.hpp"
 #include "Factory.hpp"
 
+#include <cmath>
+
 template <typename T>
 class Operand : public IOperand {
 
@@ -24,7 +26,7 @@ public:
 		return 0;
 	}
 
-	std::string 	 	&toString() const override { return _value; }
+	std::string const 	&toString() const override { return _value; }
 
 	T					toNumber() const {
 
@@ -44,18 +46,8 @@ public:
 	IOperand const * operator+(IOperand const & rhs) const override {
 
 		eOperandType type = (_type > rhs.getType()) ? _type : rhs.getType();
-		long double result;
-
-		try
-		{
-			result = std::stold(toString()) + std::stold(rhs.toString());
-		}
-		catch (std::exception &e)
-		{
-			// HOW TO MANAGE ERRORS?
-			std::cout << "Error : opearator+ : " << e.what() << std::endl;
-			return nullptr;
-		}
+		long double result = std::stold(toString()) + std::stold(rhs.toString());
+//		return _ptr->createOperand(type, std::to_string(result));
 		return Factory().createOperand(type, std::to_string(result));
 	}
 
@@ -63,19 +55,7 @@ public:
 	IOperand const * operator-(IOperand const & rhs) const override {
 
 		eOperandType type = (_type > rhs.getType()) ? _type : rhs.getType();
-		long double result;
-
-		try
-		{
-			// порядок?
-			result = std::stold(toString()) - std::stold(rhs.toString());
-		}
-		catch (std::exception &e)
-		{
-			// HOW TO MANAGE ERRORS?
-			std::cout << "Error : opearator- : " << e.what() << std::endl;
-			return nullptr;
-		}
+		long double result = std::stold(toString()) - std::stold(rhs.toString());
 		return Factory().createOperand(type, std::to_string(result));
 	}
 
@@ -83,24 +63,30 @@ public:
 	IOperand const * operator*(IOperand const & rhs) const override {
 
 		eOperandType type = (_type > rhs.getType()) ? _type : rhs.getType();
-		long double result;
-
-		try
-		{
-			result = std::stold(toString()) + std::stold(rhs.toString());
-		}
-		catch (std::exception &e)
-		{
-			// HOW TO MANAGE ERRORS?
-			std::cout << "Error : opearator* : " << e.what() << std::endl;
-			return nullptr;
-		}
+		long double result = std::stold(toString()) * std::stold(rhs.toString());
 		return Factory().createOperand(type, std::to_string(result));
 	}
 
 
-//	IOperand const * operator/(IOperand const & rhs) const override;
-//	IOperand const * operator%(IOperand const & rhs) const override;
+	IOperand const * operator/(IOperand const & rhs) const override {
+		eOperandType type = (_type > rhs.getType()) ? _type : rhs.getType();
+		long double result;
+
+		if (std::stold(rhs.toString()) == 0)
+			return nullptr;
+		result = std::stold(toString()) / std::stold(rhs.toString());
+		return Factory().createOperand(type, std::to_string(result));
+	}
+
+	IOperand const * operator%(IOperand const & rhs) const override {
+		eOperandType type = (_type > rhs.getType()) ? _type : rhs.getType();
+		long double result;
+
+		if (std::stold(rhs.toString()) == 0)
+			return nullptr;
+		result = std::fmod(std::stold(toString()), std::stold(rhs.toString()));
+		return Factory().createOperand(type, std::to_string(result));
+	}
 
 private:
 
@@ -109,5 +95,3 @@ private:
 
 	Factory const 		*_ptr;
 };
-
-//#include "Operand.cpp"

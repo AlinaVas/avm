@@ -78,6 +78,7 @@ Lexer::getInput(int ac, char **av) {
 void
 Lexer::readFromFile(char *fileName) {
 
+	std::cout << "\033[37;1m" << "======================== file: " << fileName << "\033[0m" << std::endl;
 	std::ifstream	file(fileName);
 	if (!file)
 		throw std::system_error(errno, std::system_category(), "failed to open " + std::string(fileName));

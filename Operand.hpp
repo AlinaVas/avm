@@ -11,8 +11,8 @@ class Operand : public IOperand {
 public:
 
 	Operand() = delete;
-	Operand(std::string const & value, eOperandType type, Factory const * ptr) : _value(value), _type(type), _ptr(ptr) {}
-	Operand(Operand const & rhs) : _value(rhs._value), _type(rhs._type), _ptr(rhs._ptr) {}
+	Operand(std::string const & value, eOperandType type) : _value(value), _type(type) {}
+	Operand(Operand const & rhs) : _value(rhs._value), _type(rhs._type) {}
 	~Operand() override = default;
 
 	eOperandType		getType() const override { return _type; }
@@ -86,6 +86,4 @@ private:
 
 	std::string const	_value;
 	eOperandType const	_type;
-
-	Factory const 		*_ptr;
 };

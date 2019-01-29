@@ -43,7 +43,7 @@ Parser::initParsing() {
 			quit(i);
 		}
 	}
-	std::cout << GREEN << "===== Program exit =====" << RESET << std::endl;
+	std::cout << GREEN << "..... Program exit ....." << RESET << std::endl;
 }
 
 void
@@ -62,9 +62,9 @@ void
 Parser::dump(size_t &) {
 	std::string typeName[5] = {"int8", "int16", "int32", "float", "double"};
 	if (_stack.empty())
-		std::cout << YELLOW << "=== Stack is empty! ===" << RESET << std::endl;
+		std::cout << YELLOW << "... Stack is empty! ..." << RESET << std::endl;
 	else {
-		std::cout << YELLOW << "=== Content of stack ===" << RESET << std::endl;
+		std::cout << YELLOW << "... Content of stack ..." << RESET << std::endl;
 		for (auto &it : _stack) {
 			std::string val(it->toString());
 			if (it->getType() != Float && it->getType() != Double && val.find('.') != std::string::npos) {
@@ -73,7 +73,7 @@ Parser::dump(size_t &) {
 				val.erase(val.begin() + val.find_last_not_of('0') + 1, val.end());
 			std::cout << YELLOW << typeName[it->getType()] << "(" << val << ")" << RESET << std::endl;
 		}
-		std::cout << YELLOW << "========================" << RESET << std::endl;
+		std::cout << YELLOW << "........................" << RESET << std::endl;
 	}
 }
 

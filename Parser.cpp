@@ -77,6 +77,8 @@ Parser::dump(size_t &) {
 
 void
 Parser::assrt(size_t &i) {
+    if (_stack.empty())
+        throw Parser::ParsingErrorException("assertion on empty stack!");
 	if (_stack.front()->getType() != _tokens[i].operandType)
 		throw Parser::ParsingErrorException("assertion failed!");
 	if (std::stod(_stack.front()->toString()) != std::stod(_tokens[i].operandValue))
@@ -169,8 +171,11 @@ void Parser::print(size_t &) {
 
 void Parser::quit(size_t &i) {
 	for (auto i = _stack.begin(); i != _stack.end(); i++) {
-		if (*i)
-			delete *i;
+		if (*i) {
+		    std::cout << "here\n";
+            delete *i;
+		}
+
 	}
 	i ? exit(-1) : exit(0);
 }

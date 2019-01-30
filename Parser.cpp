@@ -16,6 +16,8 @@ Parser::Parser(std::vector<Token> tokens) : _tokens(std::move(tokens)) {
 	_commands.push_back(&Parser::max);
 	_commands.push_back(&Parser::sort);
 	_commands.push_back(&Parser::reverse);
+	_commands.push_back(&Parser::pushb);
+	_commands.push_back(&Parser::popb);
 }
 //TODO push_back, pop_back
 Parser::Parser(Parser const &rhs) {
@@ -221,6 +223,18 @@ void Parser::sort(size_t &) {
 
 void Parser::reverse(size_t &) {
 	_stack.reverse();
+}
+
+void
+Parser::pushb(size_t &i) {
+	_stack.push_back(Factory().createOperand(_tokens[i].operandType, _tokens[i].operandValue));
+}
+
+void
+Parser::popb(size_t &) {
+	if (_stack.empty())
+		throw Parser::ParsingErrorException("popb from empty stack");
+	_stack.pop_back();
 }
 
 void Parser::quit(size_t &i) {

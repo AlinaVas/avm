@@ -9,7 +9,7 @@
 #define MAGENTA "\033[35;1m"
 #define RESET   "\033[0m"
 
-enum eCommandType {PUSH, POP, DUMP, ASSERT, ADD, SUB, MUL, DIV, MOD, PRINT, EXIT, MIN, MAX, SORT, REVERSE, EMPTY};
+enum eCommandType {PUSH, POP, DUMP, ASSERT, ADD, SUB, MUL, DIV, MOD, PRINT, EXIT, MIN, MAX, SORT, REVERSE, PUSHB, POPB, EMPTY};
 
 struct Token {
 	int				lineNumber;

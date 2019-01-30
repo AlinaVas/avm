@@ -40,6 +40,8 @@ public:
 	void	max(size_t &);
 	void	sort(size_t &);
 	void	reverse(size_t &);
+	void 	pushb(size_t &);
+	void 	popb(size_t &);
 
 	class ParsingErrorException : public std::exception {
 

@@ -4,9 +4,9 @@
 //int lineNumber = 0;
 
 Lexer::Lexer() {
-	integerValuePattern = R"delim(^(push|assert) (int16|int8|int32)(\([-]?[[:digit:]]+\))[[:blank:]]*(;.*)?$)delim";
-	fractionalValuePattern = R"delim(^(push|assert) (float|double)(\([-]?[[:digit:]]+\.[[:digit:]]+\))[[:blank:]]*(;.*)?$)delim";
-	noValuePattern = R"delim(^(pop|dump|add|sub|mul|div|mod|print|exit|min|max|avg|sort|reverse)[[:blank:]]*(;.*)?$)delim";
+	integerValuePattern = R"delim(^(push|assert|pushb) (int16|int8|int32)(\([-]?[[:digit:]]+\))[[:blank:]]*(;.*)?$)delim";
+	fractionalValuePattern = R"delim(^(push|assert|pushb) (float|double)(\([-]?[[:digit:]]+\.[[:digit:]]+\))[[:blank:]]*(;.*)?$)delim";
+	noValuePattern = R"delim(^(pop|dump|add|sub|mul|div|mod|print|exit|min|max|avg|sort|reverse|popb)[[:blank:]]*(;.*)?$)delim";
 	emptyLinePattern = "^ *$";
 	_errorsCount = 0;
 };
@@ -126,10 +126,12 @@ Lexer::validateToken(Token &token) {
 		token.operandValue.erase(token.operandValue.find(';'));
 
 	if (std::regex_match(token.operandValue, integerValuePattern) || std::regex_match(token.operandValue, fractionalValuePattern)) {
-		if (token.operandValue[0] == 'p')
+		if (!token.operandValue.compare(0, 4, "push"))
 			token.commandType = PUSH;
-		if (token.operandValue[0] == 'a')
+		if (!token.operandValue.compare(0, 6, "assert"))
 			token.commandType = ASSERT;
+		if (!token.operandValue.compare(0, 5, "pushb"))
+			token.commandType = PUSHB;
 		token.operandValue.erase(0, token.operandValue.find(' ') + 1);
 		if (!token.operandValue.compare(0, 4, "int8"))
 			token.operandType = Int8;
@@ -171,6 +173,8 @@ Lexer::validateToken(Token &token) {
 			token.commandType = SORT;
 		if (!token.operandValue.compare(0, 7, "reverse"))
 			token.commandType = REVERSE;
+		if (!token.operandValue.compare(0, 4, "popb"))
+			token.commandType = POPB;
 		token.operandValue.clear();
 	}
 	else if (std::regex_match(token.operandValue, emptyLinePattern))

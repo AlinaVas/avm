@@ -31,6 +31,7 @@ public:
 	void readFromFile(char *);
 	void readFromStdIn();
 	void validateToken(Token &);
+	void provideUsageInfo();
 
 	std::vector<Token> getTokens() const;
 

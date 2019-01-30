@@ -78,10 +78,15 @@ Lexer::getInput(int ac, char **av) {
 void
 Lexer::readFromFile(char *fileName) {
 
-	std::cout << "\033[37;1m" << "======================== file: " << fileName << "\033[0m" << std::endl;
+	if (!strcmp(fileName, "-help") || !strcmp(fileName, "-h")) {
+		provideUsageInfo();
+	}
+
 	std::ifstream	file(fileName);
 	if (!file)
 		throw std::system_error(errno, std::system_category(), "failed to open " + std::string(fileName));
+
+	std::cout << "\033[37;1m" << "======================== file: " << fileName << "\033[0m" << std::endl;
 	std::string line;
 	for (int i = 0; std::getline(file, line); i++)
 	{
@@ -93,9 +98,19 @@ Lexer::readFromFile(char *fileName) {
 }
 
 void
+Lexer::provideUsageInfo() {
+
+	std::ifstream file("UsageInfo.txt");
+
+	if (file.is_open()) {
+		std::cout << file.rdbuf() << std::endl;
+	}
+	exit(0);
+}
+
+void
 Lexer::readFromStdIn() {
 
-	//TODO error handling
 	std::string line;
 	for (int i = 0; std::getline(std::cin, line) && line != ";;"; i++)
 	{

@@ -6,7 +6,7 @@
 Lexer::Lexer() {
 	integerValuePattern = R"delim(^(push|assert) (int16|int8|int32)(\([-]?[[:digit:]]+\))[[:blank:]]*(;.*)?$)delim";
 	fractionalValuePattern = R"delim(^(push|assert) (float|double)(\([-]?[[:digit:]]+\.[[:digit:]]+\))[[:blank:]]*(;.*)?$)delim";
-	noValuePattern = R"delim(^(pop|dump|add|sub|mul|div|mod|print|exit)[[:blank:]]*(;.*)?$)delim";
+	noValuePattern = R"delim(^(pop|dump|add|sub|mul|div|mod|print|exit|min|max|avg|sort|reverse)[[:blank:]]*(;.*)?$)delim";
 	emptyLinePattern = "^ *$";
 	_errorsCount = 0;
 };
@@ -101,10 +101,8 @@ void
 Lexer::provideUsageInfo() {
 
 	std::ifstream file("UsageInfo.txt");
-
-	if (file.is_open()) {
+	if (file.is_open())
 		std::cout << file.rdbuf() << std::endl;
-	}
 	exit(0);
 }
 
@@ -165,6 +163,14 @@ Lexer::validateToken(Token &token) {
 			token.commandType = PRINT;
 		if (!token.operandValue.compare(0, 4, "exit"))
 			token.commandType = EXIT;
+		if (!token.operandValue.compare(0, 3, "min"))
+			token.commandType = MIN;
+		if (!token.operandValue.compare(0, 3, "max"))
+			token.commandType = MAX;
+		if (!token.operandValue.compare(0, 4, "sort"))
+			token.commandType = SORT;
+		if (!token.operandValue.compare(0, 7, "reverse"))
+			token.commandType = REVERSE;
 		token.operandValue.clear();
 	}
 	else if (std::regex_match(token.operandValue, emptyLinePattern))

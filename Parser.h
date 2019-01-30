@@ -24,6 +24,7 @@ public:
 	Parser &operator=(Parser const &);
 
 	void	initParsing();
+	void	displayOperand(IOperand const*);
 	void 	push(size_t &);
 	void	pop(size_t &);
 	void	dump(size_t &);
@@ -35,6 +36,10 @@ public:
 	void	mod(size_t &);
 	void	print(size_t &);
 	void	quit(size_t &);
+	void	min(size_t &);
+	void	max(size_t &);
+	void	sort(size_t &);
+	void	reverse(size_t &);
 
 	class ParsingErrorException : public std::exception {
 

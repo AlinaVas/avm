@@ -12,8 +12,12 @@ Parser::Parser(std::vector<Token> tokens) : _tokens(std::move(tokens)) {
 	_commands.push_back(&Parser::mod);
 	_commands.push_back(&Parser::print);
 	_commands.push_back(&Parser::quit);
+	_commands.push_back(&Parser::min);
+	_commands.push_back(&Parser::max);
+	_commands.push_back(&Parser::sort);
+	_commands.push_back(&Parser::reverse);
 }
-
+//TODO push_back, pop_back
 Parser::Parser(Parser const &rhs) {
 	*this = rhs;
 }
@@ -47,6 +51,20 @@ Parser::initParsing() {
 }
 
 void
+Parser::displayOperand(IOperand const *it) {
+	std::string typeName[5] = {"int8", "int16", "int32", "float", "double"};
+	std::string val(it->toString());
+
+	if (it->getType() != Float && it->getType() != Double && val.find('.') != std::string::npos) {
+		val.erase(val.begin() + val.find('.'), val.end());
+	} else if (it->getType() == Float || it->getType() == Double) {
+		val.erase(val.begin() + val.find_last_not_of('0') + 1, val.end());
+		(*(val.end() - 1) == '.' ) ? val.append("0") : 0;
+	}
+	std::cout << YELLOW << typeName[it->getType()] << "(" << val << ")" << RESET << std::endl;
+}
+
+void
 Parser::push(size_t &i) {
 	_stack.push_front(Factory().createOperand(_tokens[i].operandType, _tokens[i].operandValue));
 }
@@ -60,21 +78,12 @@ Parser::pop(size_t &) {
 
 void
 Parser::dump(size_t &) {
-	std::string typeName[5] = {"int8", "int16", "int32", "float", "double"};
 	if (_stack.empty())
 		std::cout << YELLOW << "... Stack is empty! ...." << RESET << std::endl;
 	else {
 		std::cout << YELLOW << "... Content of stack ..." << RESET << std::endl;
-		for (auto &it : _stack) {
-			std::string val(it->toString());
-			if (it->getType() != Float && it->getType() != Double && val.find('.') != std::string::npos) {
-				val.erase(val.begin() + val.find('.'), val.end());
-			} else if (it->getType() == Float || it->getType() == Double) {
-				val.erase(val.begin() + val.find_last_not_of('0') + 1, val.end());
-				(*(val.end() - 1) == '.' ) ? val.append("0") : 0;
-			}
-			std::cout << YELLOW << typeName[it->getType()] << "(" << val << ")" << RESET << std::endl;
-		}
+		for (auto &it : _stack)
+			displayOperand(it);
 		std::cout << YELLOW << "........................" << RESET << std::endl;
 	}
 }
@@ -171,6 +180,47 @@ void Parser::print(size_t &) {
 		throw ParsingErrorException("value at the top is not int8");
 	int value = std::stoi(_stack.front()->toString());
 	std::cout << BLUE << "ascii symbol: '" << static_cast<char>(value) << "'" << RESET << std::endl;
+}
+
+/* among candidates with same value - one with the highest precision is chosen*/
+void Parser::min(size_t &) {
+	if (_stack.empty())
+		throw Parser::ParsingErrorException("stack is empty!");
+	auto min = _stack.front();
+	for (auto &i : _stack) {
+		if (std::stold(i->toString()) < std::stold(min->toString()))
+			min = i;
+		else if (std::stold(i->toString()) == std::stold(min->toString()) && i->getType() > min->getType())
+			min = i;
+	}
+	std::cout << YELLOW << "minimum: ";
+	displayOperand(min);
+}
+
+/* among candidates with same value - one with the highest precision is chosen*/
+void Parser::max(size_t &) {
+	if (_stack.empty())
+		throw Parser::ParsingErrorException("stack is empty!");
+	auto max = _stack.front();
+	for (auto &i : _stack) {
+		if (std::stold(i->toString()) > std::stold(max->toString()))
+			max = i;
+		else if (std::stold(i->toString()) == std::stold(max->toString()) && i->getType() > max->getType())
+			max = i;
+	}
+	std::cout << YELLOW << "maximum: ";
+	displayOperand(max);
+}
+
+void Parser::sort(size_t &) {
+	_stack.sort([](IOperand const *a, IOperand const *b) {
+		return std::stold(a->toString()) < std::stold(b->toString()) ||
+				(std::stold(a->toString()) == std::stold(b->toString()) && a->getType() < b->getType());
+	});
+}
+
+void Parser::reverse(size_t &) {
+	_stack.reverse();
 }
 
 void Parser::quit(size_t &i) {

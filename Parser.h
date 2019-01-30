@@ -9,7 +9,7 @@
 #define RED     "\033[31;1m"
 #define YELLOW  "\033[33;1m"
 #define BLUE    "\033[34;1m"
-#define MAGENTA "\033[35;1m"
+
 
 
 class Parser {

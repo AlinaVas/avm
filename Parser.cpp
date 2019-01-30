@@ -62,7 +62,7 @@ void
 Parser::dump(size_t &) {
 	std::string typeName[5] = {"int8", "int16", "int32", "float", "double"};
 	if (_stack.empty())
-		std::cout << YELLOW << "... Stack is empty! ..." << RESET << std::endl;
+		std::cout << YELLOW << "... Stack is empty! ...." << RESET << std::endl;
 	else {
 		std::cout << YELLOW << "... Content of stack ..." << RESET << std::endl;
 		for (auto &it : _stack) {

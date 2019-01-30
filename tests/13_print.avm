@@ -1,0 +1,5 @@
+;@
+push int8(64)
+print
+;;
+exit

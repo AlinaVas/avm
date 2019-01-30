@@ -6,6 +6,9 @@
 #include <iostream>
 #include "IOperand.hpp"
 
+#define MAGENTA "\033[35;1m"
+#define RESET   "\033[0m"
+
 enum eCommandType {PUSH, POP, DUMP, ASSERT, ADD, SUB, MUL, DIV, MOD, PRINT, EXIT, EMPTY};
 
 struct Token {

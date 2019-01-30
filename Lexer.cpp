@@ -42,7 +42,7 @@ Lexer::getInput(int ac, char **av) {
 	catch (std::exception const &e)
 	{
 		_errorsCount++;
-		std::cerr << "Error: " << e.what() << std::endl;
+		std::cerr << MAGENTA << "Error: " << e.what() << RESET << std::endl;
 	}
 
 	bool exitCommand = false;
@@ -55,7 +55,7 @@ Lexer::getInput(int ac, char **av) {
 		catch (std::exception const &e)
 		{
 			_errorsCount++;
-			std::cerr << "Error: line " << t.lineNumber << ": " << e.what() << std::endl;
+			std::cerr << MAGENTA << "Error: line " << t.lineNumber << ": " << e.what() << RESET << std::endl;
 		}
 		if (t.commandType == EXIT)
 			exitCommand = true;
@@ -67,7 +67,7 @@ Lexer::getInput(int ac, char **av) {
 		catch (std::exception const &e)
 		{
 			_errorsCount++;
-			std::cerr << "Error: " << e.what() << std::endl;
+			std::cerr << MAGENTA << "Error: " << e.what() << RESET << std::endl;
 		}
 //		std::cout <<t.lineNumber << ": command " << t.commandType << " | opType " << t.operandType << " | opVal " << t.operandValue << std::endl;
 	}

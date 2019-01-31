@@ -1,5 +1,5 @@
-#include "Lexer.h"
-#include "Parser.h"
+#include "Lexer.hpp"
+#include "Parser.hpp"
 
 int main(int ac, char **av) {
 

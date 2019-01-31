@@ -2,7 +2,7 @@
 #define AVM_PARSER_H
 
 #include "Factory.hpp"
-#include "Lexer.h"
+#include "Lexer.hpp"
 
 #define RESET   "\033[0m"
 #define GREEN	"\033[32;1m"

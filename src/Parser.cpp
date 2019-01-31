@@ -1,4 +1,4 @@
-#include "Parser.h"
+#include "Parser.hpp"
 
 Parser::Parser(std::vector<Token> tokens) : _tokens(std::move(tokens)) {
 	_commands.push_back(&Parser::push);
@@ -19,7 +19,7 @@ Parser::Parser(std::vector<Token> tokens) : _tokens(std::move(tokens)) {
 	_commands.push_back(&Parser::pushb);
 	_commands.push_back(&Parser::popb);
 }
-//TODO push_back, pop_back
+
 Parser::Parser(Parser const &rhs) {
 	*this = rhs;
 }

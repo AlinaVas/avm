@@ -1,6 +1,7 @@
 #include "Parser.hpp"
 
 Parser::Parser(std::vector<Token> tokens) : _tokens(std::move(tokens)) {
+
 	_commands.push_back(&Parser::push);
 	_commands.push_back(&Parser::pop);
 	_commands.push_back(&Parser::dump);
@@ -21,6 +22,7 @@ Parser::Parser(std::vector<Token> tokens) : _tokens(std::move(tokens)) {
 }
 
 Parser::Parser(Parser const &rhs) {
+
 	*this = rhs;
 }
 
@@ -28,6 +30,7 @@ Parser::~Parser() = default;
 
 Parser &
 Parser::operator=(Parser const &rhs) {
+
 	if (this != &rhs) {
 		_tokens = rhs._tokens;
 		_stack = rhs._stack;
@@ -37,6 +40,7 @@ Parser::operator=(Parser const &rhs) {
 
 void
 Parser::initParsing() {
+
 	for (size_t i = 0; i < _tokens.size(); i++) {
 		if (_tokens[i].commandType == EXIT)
 			break;
@@ -54,6 +58,7 @@ Parser::initParsing() {
 
 void
 Parser::displayOperand(IOperand const *it) {
+
 	std::string typeName[5] = {"int8", "int16", "int32", "float", "double"};
 	std::string val(it->toString());
 
@@ -68,11 +73,13 @@ Parser::displayOperand(IOperand const *it) {
 
 void
 Parser::push(size_t &i) {
+
 	_stack.push_front(Factory().createOperand(_tokens[i].operandType, _tokens[i].operandValue));
 }
 
 void
 Parser::pop(size_t &) {
+
 	if (_stack.empty())
 		throw Parser::ParsingErrorException("pop from empty stack");
 	_stack.pop_front();
@@ -80,6 +87,7 @@ Parser::pop(size_t &) {
 
 void
 Parser::dump(size_t &) {
+
 	if (_stack.empty())
 		std::cout << YELLOW << "... Stack is empty! ...." << RESET << std::endl;
 	else {
@@ -92,6 +100,7 @@ Parser::dump(size_t &) {
 
 void
 Parser::assrt(size_t &i) {
+
     if (_stack.empty())
         throw Parser::ParsingErrorException("assertion on empty stack!");
 	if (_stack.front()->getType() != _tokens[i].operandType)
@@ -102,6 +111,7 @@ Parser::assrt(size_t &i) {
 }
 
 void Parser::add(size_t &) {
+
 	if (_stack.size() < 2)
 		throw ParsingErrorException("not enough operands to perform addition");
 	auto op1 = _stack.front();
@@ -114,6 +124,7 @@ void Parser::add(size_t &) {
 }
 
 void Parser::sub(size_t &) {
+
 	if (_stack.size() < 2)
 		throw ParsingErrorException("not enough operands to perform subtraction");
 	auto op1 = _stack.front();
@@ -126,6 +137,7 @@ void Parser::sub(size_t &) {
 }
 
 void Parser::mul(size_t &) {
+
 	if (_stack.size() < 2)
 		throw ParsingErrorException("not enough operands to perform multiplication");
 	auto op1 = _stack.front();
@@ -138,6 +150,7 @@ void Parser::mul(size_t &) {
 }
 
 void Parser::div(size_t &) {
+
 	if (_stack.size() < 2)
 		throw ParsingErrorException("not enough operands to perform division");
 	auto op1 = _stack.front();
@@ -158,6 +171,7 @@ void Parser::div(size_t &) {
 }
 
 void Parser::mod(size_t &) {
+
 	if (_stack.size() < 2)
 		throw ParsingErrorException("not enough operands to perform division");
 	auto op1 = _stack.front();
@@ -178,6 +192,7 @@ void Parser::mod(size_t &) {
 }
 
 void Parser::print(size_t &) {
+
 	if (_stack.front()->getType() != Int8)
 		throw ParsingErrorException("value at the top is not int8");
 	int value = std::stoi(_stack.front()->toString());
@@ -186,6 +201,7 @@ void Parser::print(size_t &) {
 
 /* among candidates with same value - one with the highest precision is chosen*/
 void Parser::min(size_t &) {
+
 	if (_stack.empty())
 		throw Parser::ParsingErrorException("stack is empty!");
 	auto min = _stack.front();
@@ -201,6 +217,7 @@ void Parser::min(size_t &) {
 
 /* among candidates with same value - one with the highest precision is chosen*/
 void Parser::max(size_t &) {
+
 	if (_stack.empty())
 		throw Parser::ParsingErrorException("stack is empty!");
 	auto max = _stack.front();
@@ -215,6 +232,7 @@ void Parser::max(size_t &) {
 }
 
 void Parser::sort(size_t &) {
+
 	_stack.sort([](IOperand const *a, IOperand const *b) {
 		return std::stold(a->toString()) < std::stold(b->toString()) ||
 				(std::stold(a->toString()) == std::stold(b->toString()) && a->getType() < b->getType());
@@ -222,22 +240,26 @@ void Parser::sort(size_t &) {
 }
 
 void Parser::reverse(size_t &) {
+
 	_stack.reverse();
 }
 
 void
 Parser::pushb(size_t &i) {
+
 	_stack.push_back(Factory().createOperand(_tokens[i].operandType, _tokens[i].operandValue));
 }
 
 void
 Parser::popb(size_t &) {
+
 	if (_stack.empty())
 		throw Parser::ParsingErrorException("popb from empty stack");
 	_stack.pop_back();
 }
 
 void Parser::quit(size_t &i) {
+
 	for (auto i = _stack.begin(); i != _stack.end(); i++) {
 		if (*i)
             delete *i;
@@ -250,6 +272,7 @@ void Parser::quit(size_t &i) {
 Parser::ParsingErrorException::ParsingErrorException(char const *msg) noexcept : _msg(msg) {}
 
 Parser::ParsingErrorException::ParsingErrorException(ParsingErrorException const &rhs) noexcept {
+
 	*this = rhs;
 }
 
@@ -257,10 +280,12 @@ Parser::ParsingErrorException::~ParsingErrorException() = default;
 
 Parser::ParsingErrorException
 &Parser::ParsingErrorException::operator=(Parser::ParsingErrorException const &rhs) noexcept {
+
 	(void)rhs;
 	return *this;
 }
 
 const char *Parser::ParsingErrorException::what() const noexcept {
+
 	return _msg;
 }

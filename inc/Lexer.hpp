@@ -1,5 +1,5 @@
-#ifndef AVM_LEXER_H
-#define AVM_LEXER_H
+#ifndef AVM_LEXER_HPP
+#define AVM_LEXER_HPP
 
 #include <regex>
 #include <list>
@@ -7,6 +7,7 @@
 #include "IOperand.hpp"
 
 #define MAGENTA "\033[35;1m"
+#define WHITE "\033[37;1m"
 #define RESET   "\033[0m"
 
 enum eCommandType {PUSH, POP, DUMP, ASSERT, ADD, SUB, MUL, DIV, MOD, PRINT, EXIT, MIN, MAX, SORT, REVERSE, PUSHB, POPB, EMPTY};

@@ -1,9 +1,8 @@
 #include "Lexer.hpp"
 #include <fstream>
 
-//int lineNumber = 0;
-
 Lexer::Lexer() {
+
 	integerValuePattern = R"delim(^(push|assert|pushb) (int16|int8|int32)(\([-]?[[:digit:]]+\))[[:blank:]]*(;.*)?$)delim";
 	fractionalValuePattern = R"delim(^(push|assert|pushb) (float|double)(\([-]?[[:digit:]]+\.[[:digit:]]+\))[[:blank:]]*(;.*)?$)delim";
 	noValuePattern = R"delim(^(pop|dump|add|sub|mul|div|mod|print|exit|min|max|avg|sort|reverse|popb)[[:blank:]]*(;.*)?$)delim";
@@ -35,41 +34,33 @@ Lexer::operator=(Lexer const &rhs) {
 void
 Lexer::getInput(int ac, char **av) {
 
-	try
-	{
+	try {
 		(ac == 1) ? readFromStdIn() : readFromFile(av[1]);
 	}
-	catch (std::exception const &e)
-	{
+	catch (std::exception const &e) {
 		_errorsCount++;
 		std::cerr << MAGENTA << "Error: " << e.what() << RESET << std::endl;
 	}
 
 	bool exitCommand = false;
 	for (auto &t : _tokens) {
-
-		try
-		{
+		try {
 			validateToken(t);
 		}
-		catch (std::exception const &e)
-		{
+		catch (std::exception const &e) {
 			_errorsCount++;
 			std::cerr << MAGENTA << "Error: line " << t.lineNumber << ": " << e.what() << RESET << std::endl;
 		}
 		if (t.commandType == EXIT)
 			exitCommand = true;
-		try
-		{
+		try {
 			if (&t == &_tokens.back() && !exitCommand)
 				throw Lexer::NoExitCommandException();
 		}
-		catch (std::exception const &e)
-		{
+		catch (std::exception const &e) {
 			_errorsCount++;
 			std::cerr << MAGENTA << "Error: " << e.what() << RESET << std::endl;
 		}
-//		std::cout <<t.lineNumber << ": command " << t.commandType << " | opType " << t.operandType << " | opVal " << t.operandValue << std::endl;
 	}
 	if (_errorsCount)
 		exit(-1);
@@ -86,7 +77,7 @@ Lexer::readFromFile(char *fileName) {
 	if (!file)
 		throw std::system_error(errno, std::system_category(), "failed to open " + std::string(fileName));
 
-	std::cout << "\033[37;1m" << "======================== file: " << fileName << "\033[0m" << std::endl;
+	std::cout << WHITE << "======================== file: " << fileName << RESET << std::endl;
 	std::string line;
 	for (int i = 0; std::getline(file, line); i++)
 	{
@@ -191,6 +182,7 @@ Lexer::getTokens() const { return _tokens; }
 Lexer::NoExitCommandException::NoExitCommandException() noexcept = default;
 
 Lexer::NoExitCommandException::NoExitCommandException(NoExitCommandException const &rhs) noexcept {
+
 	*this = rhs;
 }
 
@@ -198,11 +190,13 @@ Lexer::NoExitCommandException::~NoExitCommandException() = default;
 
 Lexer::NoExitCommandException
 &Lexer::NoExitCommandException::operator=(Lexer::NoExitCommandException const &rhs) noexcept {
+
 	(void)rhs;
 	return *this;
 }
 
 const char *Lexer::NoExitCommandException::what() const noexcept {
+
 	return ("no exit command");
 }
 
@@ -211,6 +205,7 @@ const char *Lexer::NoExitCommandException::what() const noexcept {
 Lexer::LexicalErrorException::LexicalErrorException() noexcept = default;
 
 Lexer::LexicalErrorException::LexicalErrorException(LexicalErrorException const &rhs) noexcept {
+
 	*this = rhs;
 }
 
@@ -218,10 +213,12 @@ Lexer::LexicalErrorException::~LexicalErrorException() = default;
 
 Lexer::LexicalErrorException
 &Lexer::LexicalErrorException::operator=(Lexer::LexicalErrorException const &rhs) noexcept {
+
 	(void)rhs;
 	return *this;
 }
 
 const char *Lexer::LexicalErrorException::what() const noexcept {
+
 	return ("lexical error");
 }

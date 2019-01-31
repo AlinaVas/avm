@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AVM_OPERAND_HPP
+#define AVM_OPERAND_HPP
 
 #include "IOperand.hpp"
 #include "Factory.hpp"
@@ -87,3 +88,5 @@ private:
 	std::string const	_value;
 	eOperandType const	_type;
 };
+
+#endif

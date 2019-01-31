@@ -14,7 +14,7 @@ public:
 
 	IOperand const * createOperand(eOperandType type, std::string const & value) const;
 
-	class OverflowErrorException : public std::overflow_error {
+	class OverflowErrorException : public std::runtime_error {
 
 	public:
 		OverflowErrorException() = delete;

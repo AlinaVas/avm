@@ -68,9 +68,10 @@ Factory::createDouble(std::string const & value) const {
 
 /************************ EXCEPTIONS ****************************/
 
-Factory::OverflowErrorException::OverflowErrorException(char const *msg) noexcept : std::overflow_error(msg), _msg(msg) {}
+Factory::OverflowErrorException::OverflowErrorException(char const *msg) noexcept : std::runtime_error(msg), _msg(msg) {}
 
-Factory::OverflowErrorException::OverflowErrorException(OverflowErrorException const &rhs) noexcept : std::overflow_error(rhs._msg) {
+Factory::OverflowErrorException::OverflowErrorException(OverflowErrorException const &rhs) noexcept : std::runtime_error(rhs._msg) {
+
 	*this = rhs;
 }
 
@@ -78,6 +79,7 @@ Factory::OverflowErrorException::~OverflowErrorException() = default;
 
 Factory::OverflowErrorException
 &Factory::OverflowErrorException::operator=(Factory::OverflowErrorException const &rhs) noexcept {
+
 	(void)rhs;
 	return *this;
 }
@@ -92,6 +94,7 @@ const char *Factory::OverflowErrorException::what() const noexcept {
 Factory::UnderflowErrorException::UnderflowErrorException(char const *msg) noexcept : std::range_error(msg), _msg(msg) {}
 
 Factory::UnderflowErrorException::UnderflowErrorException(UnderflowErrorException const &rhs) noexcept : std::range_error(rhs._msg) {
+
 	*this = rhs;
 }
 
@@ -99,10 +102,12 @@ Factory::UnderflowErrorException::~UnderflowErrorException() = default;
 
 Factory::UnderflowErrorException
 &Factory::UnderflowErrorException::operator=(Factory::UnderflowErrorException const &rhs) noexcept {
+
 	(void)rhs;
 	return *this;
 }
 
 const char *Factory::UnderflowErrorException::what() const noexcept {
+
 	return _msg;
 }

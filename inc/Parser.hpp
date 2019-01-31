@@ -1,5 +1,5 @@
-#ifndef AVM_PARSER_H
-#define AVM_PARSER_H
+#ifndef AVM_PARSER_HPP
+#define AVM_PARSER_HPP
 
 #include "Factory.hpp"
 #include "Lexer.hpp"

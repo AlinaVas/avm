@@ -50,7 +50,7 @@ Factory::createFloat(std::string const & value) const {
 	auto val = std::stold(value);
 	if (val < -std::numeric_limits<float>::max() || val > std::numeric_limits<float>::max())
 		throw OverflowErrorException("float value overflow");
-	if (val < std::numeric_limits<float>::min())
+	if (std::abs(val) < std::numeric_limits<float>::min() && std::abs(val) > 0)
 		throw UnderflowErrorException("float value underflow");
 	return new Operand<float>(value, Float);
 }
@@ -61,7 +61,7 @@ Factory::createDouble(std::string const & value) const {
 	auto val = std::stold(value);
 	if (val < -std::numeric_limits<double>::max() || val > std::numeric_limits<double>::max())
 		throw OverflowErrorException("double value overflow");
-	if (val < std::numeric_limits<double>::min())
+	if (std::abs(val) < std::numeric_limits<double>::min() && std::abs(val) > 0)
 		throw UnderflowErrorException("double value underflow");
 	return new Operand<double>(value, Double);
 }

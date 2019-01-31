@@ -64,9 +64,10 @@ Parser::displayOperand(IOperand const *it) {
 
 	if (it->getType() != Float && it->getType() != Double && val.find('.') != std::string::npos) {
 		val.erase(val.begin() + val.find('.'), val.end());
-	} else if (it->getType() == Float || it->getType() == Double) {
+	} else if ((it->getType() == Float || it->getType() == Double) && val.find_last_not_of('0') != (val.size() - 1)) {
 		val.erase(val.begin() + val.find_last_not_of('0') + 1, val.end());
-		(*(val.end() - 1) == '.' ) ? val.append("0") : 0;
+		if (*(val.end() - 1) == '.' )
+		    val.append("0");
 	}
 	std::cout << YELLOW << typeName[it->getType()] << "(" << val << ")" << RESET << std::endl;
 }
